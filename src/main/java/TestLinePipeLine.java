@@ -27,6 +27,8 @@ class TestLinePipeLine {
     private final static Scalar maxWhite = new Scalar(180, 27, 255, 255);
     private final static Scalar minPurple = new Scalar(131, 28, 85, 0);
     private final static Scalar maxPurple = new Scalar(157, 144, 216, 255);
+    private final static Scalar minNotGray = new Scalar(0, 0, 85, 0);
+    private final static Scalar maxNotGray = new Scalar(180, 255, 255, 255);
 
     private static BufferedImage Mat2BufferedImage(Mat m) {
         // Fastest code
@@ -70,7 +72,7 @@ class TestLinePipeLine {
 
     public static void main(String[] args)
     {
-        VideoCapture capture = new VideoCapture(0, CAP_DSHOW);
+        VideoCapture capture = new VideoCapture(1, CAP_DSHOW);
 
         Mat mat = new Mat();
         Mat hsvMat = new Mat();
@@ -90,8 +92,9 @@ class TestLinePipeLine {
 
         while(true) {
             capture.read(mat);
+
             Imgproc.cvtColor(mat, hsvMat, Imgproc.COLOR_BGR2HSV);
-            inRange(hsvMat, minGreen, maxGreen, colorMat);
+            inRange(hsvMat, minNotGray, maxNotGray, colorMat);
 
             LinePipeline.findContours(colorMat, true, contours);
             for(int i=0; i<contours.size(); ++i ) {
@@ -106,50 +109,66 @@ class TestLinePipeLine {
                 }
             }
 
-            inRange(hsvMat, minYellow, maxYellow, colorMat);
-
-            LinePipeline.findContours(colorMat, true, contours);
-            for(int i=0; i<contours.size(); ++i ) {
-                MatOfPoint contour = contours.get(i);
-                contour.convertTo(mat2f, CvType.CV_32F);
-                Imgproc.minEnclosingCircle(mat2f, center, radius);
-
-                if( radius[0] > 20 ) {
-                    // draw the contour and center of the shape on the image
-                    Imgproc.drawContours(mat, contours, i, new Scalar(0, 255, 0), 2);
-                    Imgproc.putText(mat, "Y", center, Core.FONT_HERSHEY_PLAIN, 1.0, new Scalar(255, 255, 255), 1);
-                }
-            }
-
-            inRange(hsvMat, minWhite, maxWhite, colorMat);
-
-            LinePipeline.findContours(colorMat, true, contours);
-            for(int i=0; i<contours.size(); ++i ) {
-                MatOfPoint contour = contours.get(i);
-                contour.convertTo(mat2f, CvType.CV_32F);
-                Imgproc.minEnclosingCircle(mat2f, center, radius);
-
-                if( radius[0] > 20 ) {
-                    // draw the contour and center of the shape on the image
-                    Imgproc.drawContours(mat, contours, i, new Scalar(0, 255, 0), 2);
-                    Imgproc.putText(mat, "W", center, Core.FONT_HERSHEY_PLAIN, 1.0, new Scalar(255, 255, 255), 1);
-                }
-            }
-
-            inRange(hsvMat, minPurple, maxPurple, colorMat);
-
-            LinePipeline.findContours(colorMat, true, contours);
-            for(int i=0; i<contours.size(); ++i ) {
-                MatOfPoint contour = contours.get(i);
-                contour.convertTo(mat2f, CvType.CV_32F);
-                Imgproc.minEnclosingCircle(mat2f, center, radius);
-
-                if( radius[0] > 20 ) {
-                    // draw the contour and center of the shape on the image
-                    Imgproc.drawContours(mat, contours, i, new Scalar(0, 255, 0), 2);
-                    Imgproc.putText(mat, "P", center, Core.FONT_HERSHEY_PLAIN, 1.0, new Scalar(255, 255, 255), 1);
-                }
-            }
+//            Imgproc.cvtColor(mat, hsvMat, Imgproc.COLOR_BGR2HSV);
+//            inRange(hsvMat, minGreen, maxGreen, colorMat);
+//
+//            LinePipeline.findContours(colorMat, true, contours);
+//            for(int i=0; i<contours.size(); ++i ) {
+//                MatOfPoint contour = contours.get(i);
+//                contour.convertTo(mat2f, CvType.CV_32F);
+//                Imgproc.minEnclosingCircle(mat2f, center, radius);
+//
+//                if( radius[0] > 20 ) {
+//                    // draw the contour and center of the shape on the image
+//                    Imgproc.drawContours(mat, contours, i, new Scalar(0, 255, 0), 2);
+//                    Imgproc.putText(mat, "G", center, Core.FONT_HERSHEY_PLAIN, 1.0, new Scalar(255, 255, 255), 1);
+//                }
+//            }
+//
+//            inRange(hsvMat, minYellow, maxYellow, colorMat);
+//
+//            LinePipeline.findContours(colorMat, true, contours);
+//            for(int i=0; i<contours.size(); ++i ) {
+//                MatOfPoint contour = contours.get(i);
+//                contour.convertTo(mat2f, CvType.CV_32F);
+//                Imgproc.minEnclosingCircle(mat2f, center, radius);
+//
+//                if( radius[0] > 20 ) {
+//                    // draw the contour and center of the shape on the image
+//                    Imgproc.drawContours(mat, contours, i, new Scalar(0, 255, 0), 2);
+//                    Imgproc.putText(mat, "Y", center, Core.FONT_HERSHEY_PLAIN, 1.0, new Scalar(255, 255, 255), 1);
+//                }
+//            }
+//
+//            inRange(hsvMat, minWhite, maxWhite, colorMat);
+//
+//            LinePipeline.findContours(colorMat, true, contours);
+//            for(int i=0; i<contours.size(); ++i ) {
+//                MatOfPoint contour = contours.get(i);
+//                contour.convertTo(mat2f, CvType.CV_32F);
+//                Imgproc.minEnclosingCircle(mat2f, center, radius);
+//
+//                if( radius[0] > 20 ) {
+//                    // draw the contour and center of the shape on the image
+//                    Imgproc.drawContours(mat, contours, i, new Scalar(0, 255, 0), 2);
+//                    Imgproc.putText(mat, "W", center, Core.FONT_HERSHEY_PLAIN, 1.0, new Scalar(255, 255, 255), 1);
+//                }
+//            }
+//
+//            inRange(hsvMat, minPurple, maxPurple, colorMat);
+//
+//            LinePipeline.findContours(colorMat, true, contours);
+//            for(int i=0; i<contours.size(); ++i ) {
+//                MatOfPoint contour = contours.get(i);
+//                contour.convertTo(mat2f, CvType.CV_32F);
+//                Imgproc.minEnclosingCircle(mat2f, center, radius);
+//
+//                if( radius[0] > 20 ) {
+//                    // draw the contour and center of the shape on the image
+//                    Imgproc.drawContours(mat, contours, i, new Scalar(0, 255, 0), 2);
+//                    Imgproc.putText(mat, "P", center, Core.FONT_HERSHEY_PLAIN, 1.0, new Scalar(255, 255, 255), 1);
+//                }
+//            }
 
             bi1 = Mat2BufferedImage(mat);
             UpdateImage(bi1);
